@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	public ScreenController screen;
+	public Transform model;
 
 	[Header("Collision")]
 	[Range(0, 1)]
@@ -38,16 +39,50 @@ public class PlayerController : MonoBehaviour {
 	[System.NonSerialized]
 	public bool hasPendingJump;
 
+	[System.NonSerialized]
+	Animator animator;
+	[System.NonSerialized]
+	float orientation;
+	[System.NonSerialized]
+	float smoothedSpeed;
+	[System.NonSerialized]
+	int runningFlag = Animator.StringToHash("Run Speed");
+
+
 	void Start() {
 		velocity = Vector2.zero;
 		movement = Vector2.zero;
 		isTouchingGround = false;
 		hasPendingJump = false;
+		animator = model.gameObject.GetComponentInChildren<Animator>();
+		orientation = 0.5f;
+		smoothedSpeed = 0;
+	}
+
+	void OnEnable() {
+		animator = model.gameObject.GetComponentInChildren<Animator>();
 	}
 
 	void Update() {
 		if (Input.GetButtonDown("Jump"))
 			hasPendingJump = true;
+
+		var left = Quaternion.LookRotation(Vector3.left + Vector3.back * 0.01f);
+		var right = Quaternion.LookRotation(Vector3.right + Vector3.back * 0.01f);
+		if (movement.x != 0) {
+			orientation = Mathf.Clamp01(orientation + 0.5f * movement.x / Time.fixedDeltaTime * Time.deltaTime);
+			model.localRotation = Quaternion.Slerp(left, right, orientation);
+		} else if (!isTouchingGround) {
+			orientation = Mathf.Lerp(orientation, 0.35f, Time.deltaTime);
+			model.localRotation = Quaternion.Slerp(left, right, orientation);
+		}
+
+		if (isTouchingGround)
+			smoothedSpeed = Mathf.Lerp(smoothedSpeed, Mathf.Abs(movement.x) / Time.fixedDeltaTime / horizontalSpeed, 10.0f * Time.deltaTime);
+		else
+			smoothedSpeed = Mathf.Lerp(smoothedSpeed, 0.3f, Time.deltaTime);
+
+		animator.SetFloat(runningFlag, smoothedSpeed);
 	}
 
 	void FixedUpdate() {
@@ -143,9 +178,5 @@ public class PlayerController : MonoBehaviour {
 		Gizmos.DrawWireSphere(Vector3.up * lifterRadius, lifterRadius);
 		Gizmos.color = Color.green;
 		Gizmos.DrawWireSphere(Vector3.up * bumperHeight, bumperRadius);
-		Gizmos.color = Color.red;
-		Gizmos.DrawLine (Vector3.up * (bumperHeight + bumperRadius), Vector3.up * 1.6f);
-		Gizmos.DrawLine(Vector3.up * 1.6f + Vector3.left * bumperRadius, Vector3.up * 1.6f + Vector3.right * bumperRadius);
-		Gizmos.DrawWireSphere (Vector3.up * 1.8f, 0.2f);
 	}
 }
