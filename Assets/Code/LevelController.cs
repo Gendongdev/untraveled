@@ -42,7 +42,7 @@ public class LevelController : MonoBehaviour {
 		currentPosition += wrappingOffset;
 
 		foreach (var extensiblePlatform in extensiblePlatforms) {
-			if (extensiblePlatform.IsExtended) {
+			if (extensiblePlatform.enabled && extensiblePlatform.IsExtended) {
 				var availableHalfSize = extensiblePlatform.halfSize - screenHalfSize;
 
 				var leftOffset = Mathf.Min(0,  extensiblePlatform.transform.position.x - player.movement.x - availableHalfSize.x);

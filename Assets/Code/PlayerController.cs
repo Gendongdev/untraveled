@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour {
 	public AudioClip pickup;
 	public AudioClip button_success;
 	public AudioClip button_fail;
+	public AudioClip move_rock;
 	public AudioSource wind;
 
 	[System.NonSerialized]
@@ -227,6 +228,10 @@ public class PlayerController : MonoBehaviour {
 
 	public void PlayButtonFail() {
 		GetComponent<AudioSource>().PlayOneShot(button_fail);
+	}
+
+	public void PlayMoveRock() {
+		GetComponent<AudioSource>().PlayOneShot(move_rock);
 	}
 
 	void OnDrawGizmos() {
