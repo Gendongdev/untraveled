@@ -13,6 +13,10 @@ public class StarController : MonoBehaviour {
 		material = GetComponent<MeshRenderer>().material;
 		baseScale = transform.localScale;
 	}
+
+	void OnEnable() {
+		material = GetComponent<MeshRenderer>().material;
+	}
 	
 	void Update () {
 		material.color = new Color(1, 1, 1, 0.2f + 0.3f * Mathf.PerlinNoise(transform.position.x * transform.position.y, Time.time * 3.0f));
