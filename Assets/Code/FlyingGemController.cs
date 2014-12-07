@@ -5,10 +5,19 @@ public class FlyingGemController : MonoBehaviour {
 
 	public ScenarioController scenario;
 	public Transform model;
+
+	[System.NonSerialized]
+	Vector3 baseScale;
+
+	void Start() {
+		baseScale = model.transform.localScale;
+		model.transform.localScale = Vector3.zero;
+	}
 	
 	void Update() {
 		model.localRotation = Quaternion.Euler(new Vector3(270, Time.time * 30, 0));
 		model.localPosition = Vector3.up * (-0.3f + 0.1f * Mathf.Sin(Time.time * 2));
+		model.transform.localScale = Vector3.Lerp(model.transform.localScale, baseScale, 10.0f * Time.deltaTime);
 	}
 
 	void OnTriggerEnter(Collider other) {
