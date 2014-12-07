@@ -8,7 +8,7 @@ public class FlyingGemController : MonoBehaviour {
 	
 	void Update() {
 		model.localRotation = Quaternion.Euler(new Vector3(270, Time.time * 30, 0));
-		model.localPosition = Vector3.up * (0.2f + 0.1f * Mathf.Sin(Time.time * 2));
+		model.localPosition = Vector3.up * (-0.3f + 0.1f * Mathf.Sin(Time.time * 2));
 	}
 
 	void OnTriggerEnter(Collider other) {
