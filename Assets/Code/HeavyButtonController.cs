@@ -20,8 +20,11 @@ public class HeavyButtonController : MonoBehaviour {
 		var playerController = other.GetComponent<PlayerController>();
 		if (playerController != null) {
 			if (playerController.lastImpactVelocity < -minimumVelocity || playerController.velocity.y < -minimumVelocity) {
+				playerController.PlayButtonSuccess();
 				scenario.Advance();
 				gameObject.SetActive(false);
+			} else {
+				playerController.PlayButtonFail();
 			}
 		}
 	}

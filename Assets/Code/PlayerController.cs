@@ -30,16 +30,30 @@ public class PlayerController : MonoBehaviour {
 	[Range(0, 20)]
 	public float jumpSpeed = 10;
 
+	[Header("Sounds")]
+	public AudioClip run1;
+	public AudioClip run2;
+	public AudioClip land;
+	public AudioClip pickup;
+	public AudioClip button_success;
+	public AudioClip button_fail;
+	public AudioSource wind;
+
 	[System.NonSerialized]
 	public Vector2 velocity;
 	[System.NonSerialized]
 	public Vector2 movement;
 	[System.NonSerialized]
 	public float lastImpactVelocity;
+
 	[System.NonSerialized]
 	public bool isTouchingGround;
 	[System.NonSerialized]
 	public bool hasPendingJump;
+	[System.NonSerialized]
+	public float runWheel;
+	[System.NonSerialized]
+	public bool runWheelToggle;
 
 	[System.NonSerialized]
 	Animator animator;
@@ -85,10 +99,22 @@ public class PlayerController : MonoBehaviour {
 		else
 			smoothedSpeed = Mathf.Lerp(smoothedSpeed, 0.3f, Time.deltaTime);
 
+		if (isTouchingGround)
+			wind.volume = Mathf.Lerp(wind.volume, 0.0f, 3.0f * Time.deltaTime);
+		else
+			wind.volume = Mathf.Lerp(wind.volume, 0.15f + 0.03f * Mathf.Sin(10 * Time.time), 0.1f * Mathf.Abs(movement.y) / Time.fixedDeltaTime * Time.deltaTime);
+
 		animator.SetFloat(runningFlag, smoothedSpeed);
 
 		// This is required to trigger OnTriggerEnter on other triggers...
 		transform.localPosition = transform.localPosition;
+
+		
+		if (isTouchingGround && (Input.GetButtonDown("Left") || Input.GetButtonDown("Right"))) {
+			GetComponent<AudioSource>().PlayOneShot(runWheelToggle ? run1 : run2);
+			runWheel = 0;
+			runWheelToggle = !runWheelToggle;
+		}
 	}
 
 	void FixedUpdate() {
@@ -115,8 +141,11 @@ public class PlayerController : MonoBehaviour {
 			// Move out of the colliding element
 			movement.y += Mathf.Max(0, lifterDistance - hitInfo.distance - lifterTolerance);
 			// Kill vertical velocity
-			if (velocity.y < 0)
+			if (velocity.y < 0) {
 				lastImpactVelocity = velocity.y;
+				if (velocity.y < -5.0f)
+					GetComponent<AudioSource>().PlayOneShot(land);
+			}
 			velocity.y = Mathf.Max(velocity.y, 0);
 			isTouchingGround = true;
 		} else {
@@ -144,6 +173,15 @@ public class PlayerController : MonoBehaviour {
 				movement = allowedMovement;
 			else
 				movement = allowedMovement + slidingDirection * slidingDistance;
+		}
+
+		if (isTouchingGround) {
+			runWheel += Mathf.Abs(movement.x) * 0.75f;
+			if (runWheel > 1) {
+				GetComponent<AudioSource>().PlayOneShot(runWheelToggle ? run1 : run2);
+				runWheel -= 1;
+				runWheelToggle = !runWheelToggle;
+			}
 		}
 	}
 
@@ -178,6 +216,18 @@ public class PlayerController : MonoBehaviour {
 			hasHit = true;
 		}
 		return hasHit;
+	}
+
+	public void PlayPickup() {
+		GetComponent<AudioSource>().PlayOneShot(pickup);
+	}
+
+	public void PlayButtonSuccess() {
+		GetComponent<AudioSource>().PlayOneShot(button_success);
+	}
+
+	public void PlayButtonFail() {
+		GetComponent<AudioSource>().PlayOneShot(button_fail);
 	}
 
 	void OnDrawGizmos() {

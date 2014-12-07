@@ -14,6 +14,7 @@ public class FlyingGemController : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		var playerController = other.GetComponent<PlayerController>();
 		if (playerController != null) {
+			playerController.PlayPickup();
 			scenario.Advance();
 			gameObject.SetActive(false);
 		}
