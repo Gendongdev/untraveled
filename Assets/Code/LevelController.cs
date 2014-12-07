@@ -59,14 +59,30 @@ public class LevelController : MonoBehaviour {
 		RaycastHit hitInfo;
 		Vector3 movement3 = player.movement;
 		foreach (var flyingGem in GetComponentsInChildren<FlyingGemController>()) {
-			// XXX: this is ugly...
-			var hasHit = Physics.SphereCast(flyingGem.transform.position, 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
-			hasHit |= Physics.SphereCast(flyingGem.transform.position + new Vector3(0, screen.size.y, 0), 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
-			hasHit |= Physics.SphereCast(flyingGem.transform.position + new Vector3(screen.size.x, 0, 0), 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
-			hasHit |= Physics.SphereCast(flyingGem.transform.position + new Vector3(screen.size.x, screen.size.y, 0), 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
+			// XXX: All of this is *very*, *very*, *very* ugly :(
+			var hasHit = false;
 
-			if (movement3.magnitude == 0 || !hasHit)
-					flyingGem.transform.localPosition += (Vector3) (player.movement - wrappingOffset);
+			if (player.movement.magnitude > 0) {
+				hasHit |= Physics.SphereCast(flyingGem.transform.position, 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
+				hasHit |= Physics.SphereCast(flyingGem.transform.position + new Vector3(0, screen.size.y, 0), 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
+				hasHit |= Physics.SphereCast(flyingGem.transform.position + new Vector3(screen.size.x, 0, 0), 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
+				hasHit |= Physics.SphereCast(flyingGem.transform.position + new Vector3(screen.size.x, screen.size.y, 0), 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude);
+			}
+			if (!hasHit)
+				flyingGem.transform.localPosition += (Vector3) (player.movement - wrappingOffset);
+
+			var flyingOffset = Vector2.zero;
+			var flyingPosition = flyingGem.transform.localPosition;
+
+			if (flyingPosition.x >= screenHalfSize.x)
+				flyingOffset.x = -screen.size.x;
+			if (flyingPosition.y >= screenHalfSize.y)
+				flyingOffset.y = -screen.size.y;
+			if (flyingPosition.x <= -screenHalfSize.x)
+				flyingOffset.x = screen.size.x;
+			if (flyingPosition.y <= -screenHalfSize.y)
+				flyingOffset.y = screen.size.y;
+			flyingGem.transform.localPosition += (Vector3)flyingOffset;
 		}
 		transform.localPosition = currentPosition;
 	}
