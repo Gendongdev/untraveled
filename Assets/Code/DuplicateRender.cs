@@ -42,19 +42,19 @@ public class DuplicateRender : MonoBehaviour {
 		meshRenderer = GetComponent<MeshRenderer>();
 	}
 
-	void Update () {
+	void Update() {
 		var materialPropertyBlock = new MaterialPropertyBlock();
 		//materialPropertyBlock.AddColor("_Color", Color.gray);
 		var baseMatrix = transform.localToWorldMatrix;
-		Graphics.DrawMesh(meshFilter.sharedMesh, topLeftMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
-		Graphics.DrawMesh(meshFilter.sharedMesh, topMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
-		Graphics.DrawMesh(meshFilter.sharedMesh, topRightMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
+		Graphics.DrawMesh(meshFilter.sharedMesh, topLeftMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
+		Graphics.DrawMesh(meshFilter.sharedMesh, topMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
+		Graphics.DrawMesh(meshFilter.sharedMesh, topRightMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
 
-		Graphics.DrawMesh(meshFilter.sharedMesh, leftMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
-		Graphics.DrawMesh(meshFilter.sharedMesh, rightMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
+		Graphics.DrawMesh(meshFilter.sharedMesh, leftMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
+		Graphics.DrawMesh(meshFilter.sharedMesh, rightMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
 
-		Graphics.DrawMesh(meshFilter.sharedMesh, bottomLeftMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
-		Graphics.DrawMesh(meshFilter.sharedMesh, bottomMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
-		Graphics.DrawMesh(meshFilter.sharedMesh, bottomRightMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, meshRenderer.receiveShadows, meshRenderer.castShadows);
+		Graphics.DrawMesh(meshFilter.sharedMesh, bottomLeftMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
+		Graphics.DrawMesh(meshFilter.sharedMesh, bottomMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
+		Graphics.DrawMesh(meshFilter.sharedMesh, bottomRightMatrix * baseMatrix, meshRenderer.sharedMaterial, 0, null, 0, materialPropertyBlock, true, true);
 	}
 }

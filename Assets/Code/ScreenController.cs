@@ -3,4 +3,8 @@ using System.Collections;
 
 public class ScreenController : MonoBehaviour {
 	public Vector2 size;
+
+	void Start() {
+		Screen.showCursor = false;
+	}
 }

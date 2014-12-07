@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetButtonDown("Jump"))
+		if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Up"))
 			hasPendingJump = true;
 
 		var left = Quaternion.LookRotation(Vector3.left + Vector3.back * 0.01f);
@@ -124,9 +124,8 @@ public class PlayerController : MonoBehaviour {
 			velocity.y = Mathf.Max(-terminalVelocity, velocity.y - gravity * Time.fixedDeltaTime);
 
 		if (hasPendingJump) {
-			if (isTouchingGround) {
+			if (isTouchingGround)
 				velocity.y = jumpSpeed;
-			}
 			hasPendingJump = false;
 		}
 

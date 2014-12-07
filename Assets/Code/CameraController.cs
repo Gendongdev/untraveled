@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour {
 	[Range(0.1f, 10)]
 	public float targetRatio = 1.6f;
 
-	void Update () {
+	void OnPreCull() {
 		var screenRatio = ((float)Screen.width) / Screen.height;
 		if (screenRatio < targetRatio) {
 			camera.fieldOfView = verticalFov / screenRatio * targetRatio;
