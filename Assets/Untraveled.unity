@@ -2663,6 +2663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scenario: {fileID: 51849676}
+  model: {fileID: 2121689443}
   minimumVelocity: 38
 --- !u!1 &1929890818
 GameObject:
