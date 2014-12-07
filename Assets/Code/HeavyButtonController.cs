@@ -18,7 +18,7 @@ public class HeavyButtonController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		var playerController = other.GetComponent<PlayerController>();
-		if (playerController != null) {
+		if (playerController != null && playerController.velocity.y <= 0) {
 			if (playerController.lastImpactVelocity < -minimumVelocity || playerController.velocity.y < -minimumVelocity) {
 				playerController.PlayButtonSuccess();
 				scenario.Advance();
