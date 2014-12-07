@@ -32,8 +32,9 @@ public class FallingGemController : MonoBehaviour {
 			wrappingOffset.y = -velocity * Time.fixedDeltaTime;
 			RaycastHit hitInfo;
 			// TODO: fetch this from sphere collider
-			if (Physics.SphereCast(transform.position, 0.3f, Vector3.down, out hitInfo, -wrappingOffset.y)) {
-				wrappingOffset.y = -hitInfo.distance;
+			var hasHit = Physics.SphereCast(transform.position + Vector3.up, 0.3f, Vector3.down, out hitInfo, -wrappingOffset.y + 1);
+			if (hasHit) {
+				wrappingOffset.y = -(hitInfo.distance - 1);
 				velocity = 0;
 				landed = true;
 			}
@@ -43,11 +44,11 @@ public class FallingGemController : MonoBehaviour {
 		if (transform.localPosition.x >= screenSize.x * 0.5f)
 			wrappingOffset.x = -screenSize.x;
 		if (transform.localPosition.y >= screenSize.y * 0.5f)
-			wrappingOffset.y = -screenSize.y;
+			wrappingOffset.y += -screenSize.y;
 		if (transform.localPosition.x <= -screenSize.x * 0.5f)
 			wrappingOffset.x = screenSize.x;
 		if (transform.localPosition.y <= -screenSize.y * 0.5f)
-			wrappingOffset.y = screenSize.y;
+			wrappingOffset.y += screenSize.y;
 		transform.localPosition += (Vector3)wrappingOffset;
 	}
 
