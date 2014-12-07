@@ -7,4 +7,9 @@ public class ScreenController : MonoBehaviour {
 	void Start() {
 		Screen.showCursor = false;
 	}
+
+	void Update() {
+		if (Input.GetButtonDown("Quit"))
+			Application.Quit();
+	}
 }
