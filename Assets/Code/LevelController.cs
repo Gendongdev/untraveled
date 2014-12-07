@@ -56,6 +56,13 @@ public class LevelController : MonoBehaviour {
 			}
 		}
 
+		RaycastHit hitInfo;
+		Vector3 movement3 = player.movement;
+		foreach (var flyingGem in GetComponentsInChildren<FlyingGemController>()) {
+			// XXX: this is ugly...
+			if (movement3.magnitude == 0 || !Physics.SphereCast(flyingGem.transform.position, 0.3f, movement3.normalized, out hitInfo, player.movement.magnitude))
+					flyingGem.transform.localPosition += (Vector3) (player.movement - wrappingOffset);
+		}
 		transform.localPosition = currentPosition;
 	}
 }

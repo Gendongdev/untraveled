@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour {
 	[System.NonSerialized]
 	public Vector2 movement;
 	[System.NonSerialized]
+	public float lastImpactVelocity;
+	[System.NonSerialized]
 	public bool isTouchingGround;
 	[System.NonSerialized]
 	public bool hasPendingJump;
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour {
 	void Start() {
 		velocity = Vector2.zero;
 		movement = Vector2.zero;
+		lastImpactVelocity = 0;
 		isTouchingGround = false;
 		hasPendingJump = false;
 		animator = model.gameObject.GetComponentInChildren<Animator>();
@@ -83,6 +86,9 @@ public class PlayerController : MonoBehaviour {
 			smoothedSpeed = Mathf.Lerp(smoothedSpeed, 0.3f, Time.deltaTime);
 
 		animator.SetFloat(runningFlag, smoothedSpeed);
+
+		// This is required to trigger OnTriggerEnter on other triggers...
+		transform.localPosition = transform.localPosition;
 	}
 
 	void FixedUpdate() {
@@ -109,6 +115,8 @@ public class PlayerController : MonoBehaviour {
 			// Move out of the colliding element
 			movement.y += Mathf.Max(0, lifterDistance - hitInfo.distance - lifterTolerance);
 			// Kill vertical velocity
+			if (velocity.y < 0)
+				lastImpactVelocity = velocity.y;
 			velocity.y = Mathf.Max(velocity.y, 0);
 			isTouchingGround = true;
 		} else {
